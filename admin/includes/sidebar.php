@@ -28,7 +28,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">
+                <a class="nav-link active" aria-current="page" href="../donasi/index.php">
                     <span data-feather="gift" class="align-text-bottom"></span>
                     Donasi
                 </a>
