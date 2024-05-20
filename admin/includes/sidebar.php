@@ -34,7 +34,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">
+                <a class="nav-link active" aria-current="page" href="../galeri/index.php">
                     <span data-feather="image" class="align-text-bottom"></span>
                     Galeri
                 </a>
