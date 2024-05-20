@@ -22,7 +22,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">
+                <a class="nav-link active" aria-current="page" href="../dana/index.php">
                     <span data-feather="dollar-sign" class="align-text-bottom"></span>
                     Dana
                 </a>
