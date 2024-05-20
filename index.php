@@ -18,9 +18,11 @@ if (isset($_POST['submit'])) {
         if (password_verify($password, $row['password'])) {
             $_SESSION['username'] = $username;
             if($row['peran'] == 'admin'){
+                $_SESSION['peran'] = 'admin';
                 header('Location: admin/index.php');
             }else if($row['peran'] == 'user'){
-            header('Location: home.php');
+                $_SESSION['peran'] = 'user';
+                header('Location: home.php');
             exit;
             }
         } else {

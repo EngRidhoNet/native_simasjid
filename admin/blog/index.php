@@ -21,7 +21,7 @@
                 <table class="table table-striped table-sm" id="blogTable">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>No</th>
                             <th>Judul</th>
                             <th>Isi</th>
                             <th>Foto</th>
@@ -39,9 +39,10 @@
                         $result = $conn->query($sql);
 
                         if ($result->num_rows > 0) {
+                            $counter = 1; // Initialize the counter
                             while ($row = $result->fetch_assoc()) {
                                 echo "<tr>
-                        <td>" . $row["id_blog"] . "</td>
+                        <td>" . $counter . "</td> <!-- Use the counter for the ID column -->
                         <td>" . $row["judul"] . "</td>
                         <td>" . substr($row["isi"], 0, 50) . "...</td>
                         <td><img src='" . $row["foto"] . "' alt='Foto' style='width: 100px; height: auto;'></td>
@@ -53,6 +54,7 @@
                             <button class='btn btn-sm btn-danger deleteBlogButton' data-id='" . $row["id_blog"] . "'>Delete</button>
                         </td>
                     </tr>";
+                                $counter++; // Increment the counter
                             }
                         } else {
                             echo "<tr><td colspan='8'>No blogs found</td></tr>";
@@ -61,6 +63,7 @@
                     </tbody>
                 </table>
             </div>
+
 
         </main>
     </div>
@@ -119,6 +122,7 @@ if ($result->num_rows > 0) {
     </div>
 </div>
 
+
 <!-- Edit Blog Modal -->
 <div class="modal fade" id="editBlogModal" tabindex="-1" aria-labelledby="editBlogModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -140,7 +144,7 @@ if ($result->num_rows > 0) {
                     </div>
                     <div class="mb-3">
                         <label for="edit_foto" class="form-label">Foto</label>
-                        <input type="file" class="form-control" id="edit_foto" name="foto" required>
+                        <input type="file" class="form-control" id="edit_foto" name="foto" value="" required>
                     </div>
                     <div class="mb-3">
                         <label for="id_pengguna" class="form-label">Penulis</label>

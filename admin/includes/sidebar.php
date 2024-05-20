@@ -10,13 +10,13 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="blog/index.php">
+                <a class="nav-link active" aria-current="page" href="../blog/index.php">
                     <span data-feather="file" class="align-text-bottom"></span>
                     Blog
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">
+                <a class="nav-link active" aria-current="page" href="../buku/index.php">
                     <span data-feather="book" class="align-text-bottom"></span>
                     Buku
                 </a>

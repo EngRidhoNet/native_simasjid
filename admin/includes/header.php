@@ -1,3 +1,15 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['username'])) {
+    header('Location: ../../index.php');
+    exit;
+}
+if ($_SESSION['peran'] !== 'admin') {
+    header('Location: unauthorized.php');
+    exit;
+}
+?>
 <!doctype html>
 <html lang="en">
 
@@ -12,6 +24,11 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <!-- CKEditor -->
     <script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Include DataTables CSS and JS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
 
 </head>
 <?php include 'style.php'; ?>
