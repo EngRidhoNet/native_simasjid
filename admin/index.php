@@ -172,7 +172,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">
+                        <a class="nav-link active" aria-current="page" href="kegiatan/index.php">
                             <span data-feather="activity" class="align-text-bottom"></span>
                             Kegiatan
                         </a>
