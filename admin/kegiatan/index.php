@@ -34,8 +34,8 @@
                             while ($row = mysqli_fetch_assoc($result)) {
                                 echo "<tr>";
                                 echo "<td>" . $row['judul'] . "</td>";
-                                echo "<td><img src='" . $row['foto'] . "' alt='Gambar Kegiatan' width='100'></td>";
                                 echo "<td>" . $row['deskripsi'] . "</td>";
+                                echo "<td><img src='" . $row['foto'] . "' alt='Gambar Kegiatan' width='100'></td>";
                                 echo "<td>" . $row['tanggal'] . "</td>";
                                 echo "<td>" . $row['waktu'] . "</td>";
                                 echo "<td>" . $row['lokasi'] . "</td>";

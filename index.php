@@ -5,7 +5,7 @@ include 'koneksi/koneksi.php';
 if (isset($_POST['submit'])) {
     $username = $_POST['username'];
     $password = $_POST['password'];
-    $id = $_POST['id_pengguna'];
+    // $id = $_POST['id_pengguna'];
 
     // Prepared statement untuk mencegah SQL Injection
     $query = $conn->prepare("SELECT * FROM pengguna WHERE username = ?");
@@ -22,8 +22,8 @@ if (isset($_POST['submit'])) {
                 $_SESSION['peran'] = 'admin';
                 $_SESSION['id_pengguna'] = $row['id_pengguna'];
                 header('Location: admin/index.php');
-            }else if($row['peran'] == 'user'){
-                $_SESSION['peran'] = 'user';
+            }else if($row['peran'] == 'jamaah'){
+                $_SESSION['peran'] = 'jamaah';
                 header('Location: home.php');
             exit;
             }

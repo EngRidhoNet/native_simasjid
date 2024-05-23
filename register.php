@@ -107,11 +107,10 @@ $conn->close();
 </head>
 
 <body>
-
 	<div class="container-fluid">
 		<div class="login-container">
 			<div class="form-container">
-				<h2 class="text-center">Login</h2>
+				<h2 class="text-center">Register</h2>
 				<form action="" method="post" role="form">
 					<div class="form-group">
 						<label for="nama_pengguna">Nama Pengguna</label>
