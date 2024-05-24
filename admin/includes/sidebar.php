@@ -52,7 +52,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">
+                <a class="nav-link active" aria-current="page" href="../komentar/index.php">
                     <span data-feather="message-square" class="align-text-bottom"></span>
                     Komentar Blog
                 </a>
