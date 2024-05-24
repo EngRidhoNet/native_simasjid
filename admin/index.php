@@ -184,15 +184,9 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">
+                        <a class="nav-link active" aria-current="page" href="transaksi/index.php">
                             <span data-feather="dollar-sign" class="align-text-bottom"></span>
-                            Pemasukan
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">
-                            <span data-feather="shopping-cart" class="align-text-bottom"></span>
-                            Pengeluaran
+                            Transaksi
                         </a>
                     </li>
                     <li class="nav-item">

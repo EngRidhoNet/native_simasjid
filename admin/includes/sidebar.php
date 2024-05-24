@@ -1,5 +1,3 @@
-
-
 <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
     <div class="position-sticky sidebar-sticky">
         <ul class="nav flex-column">
@@ -58,15 +56,9 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">
+                <a class="nav-link active" aria-current="page" href="../transaksi/index.php">
                     <span data-feather="dollar-sign" class="align-text-bottom"></span>
-                    Pemasukan
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">
-                    <span data-feather="shopping-cart" class="align-text-bottom"></span>
-                    Pengeluaran
+                    Transaksi
                 </a>
             </li>
             <li class="nav-item">
@@ -89,59 +81,59 @@
 <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js/dist/Chart.min.js"></script>
 <script>
-        /* globals Chart:false, feather:false */
+    /* globals Chart:false, feather:false */
 
-        (function() {
-            'use strict'
+    (function() {
+        'use strict'
 
-            feather.replace({
-                'aria-hidden': 'true'
-            })
+        feather.replace({
+            'aria-hidden': 'true'
+        })
 
-            // Graphs
-            var ctx = document.getElementById('myChart')
-            // eslint-disable-next-line no-unused-vars
-            var myChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: [
-                        'Sunday',
-                        'Monday',
-                        'Tuesday',
-                        'Wednesday',
-                        'Thursday',
-                        'Friday',
-                        'Saturday'
+        // Graphs
+        var ctx = document.getElementById('myChart')
+        // eslint-disable-next-line no-unused-vars
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [
+                    'Sunday',
+                    'Monday',
+                    'Tuesday',
+                    'Wednesday',
+                    'Thursday',
+                    'Friday',
+                    'Saturday'
+                ],
+                datasets: [{
+                    data: [
+                        15339,
+                        21345,
+                        18483,
+                        24003,
+                        23489,
+                        24092,
+                        12034
                     ],
-                    datasets: [{
-                        data: [
-                            15339,
-                            21345,
-                            18483,
-                            24003,
-                            23489,
-                            24092,
-                            12034
-                        ],
-                        lineTension: 0,
-                        backgroundColor: 'transparent',
-                        borderColor: '#007bff',
-                        borderWidth: 4,
-                        pointBackgroundColor: '#007bff'
-                    }]
+                    lineTension: 0,
+                    backgroundColor: 'transparent',
+                    borderColor: '#007bff',
+                    borderWidth: 4,
+                    pointBackgroundColor: '#007bff'
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: false
+                    }
                 },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: false
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
+                plugins: {
+                    legend: {
+                        display: false
                     }
                 }
-            })
-        })()
+            }
+        })
+    })()
 </script>
