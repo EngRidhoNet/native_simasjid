@@ -190,13 +190,13 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">
+                        <a class="nav-link active" aria-current="page" href="pengguna/index.php">
                             <span data-feather="users" class="align-text-bottom"></span>
                             Pengguna
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">
+                        <a class="nav-link active" aria-current="page" href="pinjaman/index.php">
                             <span data-feather="book-open" class="align-text-bottom"></span>
                             Pinjaman Buku
                         </a>
