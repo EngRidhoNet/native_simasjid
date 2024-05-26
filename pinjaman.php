@@ -1,7 +1,7 @@
 <?php
 include 'includes/header.php';
 include 'koneksi/koneksi.php';
-
+// Get the logged-in user's ID
 $id_pengguna = $_SESSION['id_pengguna'];
 ?>
 
@@ -37,32 +37,60 @@ $id_pengguna = $_SESSION['id_pengguna'];
 </style>
 
 <body>
-    <?php
-    include 'includes/navbar.php';
-    ?>
-
+    <?php include 'includes/navbar.php'; ?>
     <div class="content">
         <div class="container mt-5">
             <ul class="nav nav-tabs">
-                <li class="nav-item"></li>
-                <a class="nav-link active" href="buku.php">Daftar Buku</a>
+                <li class="nav-item">
+                    <a class="nav-link" href="buku.php">Daftar Buku</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="pinjaman.php">Daftar Pinjaman Buku</a>
+                    <a class="nav-link active" href="pinjaman.php">Daftar Pinjaman Buku</a>
                 </li>
             </ul>
-            </li>
-            <table id="bookTable" class="table table-striped table-bordered" style="width:100%">
-                
+            <table id="pinjamanTable" class="table table-striped table-bordered" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Judul</th>
+                        <th>Penulis</th>
+                        <th>Tanggal Pinjam</th>
+                        <th>Tanggal Kembali</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    // Fetch loan data for the logged-in user from the database
+                    $sql = "SELECT b.judul, b.penulis, p.tanggal_pinjam, p.tanggal_kembali
+                            FROM pinjamanbuku p
+                            JOIN buku b ON p.id_buku = b.id_buku
+                            WHERE p.id_pengguna = ?";
+                    $stmt = $conn->prepare($sql);
+                    $stmt->bind_param("i", $id_pengguna);
+                    $stmt->execute();
+                    $result = $stmt->get_result();
+
+                    if ($result->num_rows > 0) {
+                        // Output data of each row
+                        while ($row = $result->fetch_assoc()) {
+                            echo "<tr>
+                                <td>" . $row["judul"] . "</td>
+                                <td>" . $row["penulis"] . "</td>
+                                <td>" . $row["tanggal_pinjam"] . "</td>
+                                <td>" . $row["tanggal_kembali"] . "</td>
+                            </tr>";
+                        }
+                    } else {
+                        echo "<tr><td colspan='4'>No loans found.</td></tr>";
+                    }
+                    $stmt->close();
+                    $conn->close();
+                    ?>
+                </tbody>
             </table>
         </div>
     </div>
 
- 
-
-    <?php
-    include 'includes/footer.php';
-    ?>
+    <?php include 'includes/footer.php'; ?>
 
     <!-- Include jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -74,7 +102,7 @@ $id_pengguna = $_SESSION['id_pengguna'];
 
     <script>
         $(document).ready(function() {
-            $('#bookTable').DataTable();
+            $('#pinjamanTable').DataTable();
         });
     </script>
 </body>

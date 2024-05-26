@@ -14,19 +14,19 @@
                        <a class="nav-link" href="../buku.php">Buku</a>
                    </li>
                    <li class="nav-item">
-                       <a class="nav-link" href="#keuangan">Keuangan</a>
+                       <a class="nav-link" href="../keuangan.php">Keuangan</a>
                    </li>
                    <li class="nav-item">
-                       <a class="nav-link" href="#berdonasi">Berdonasi</a>
+                       <a class="nav-link" href="../donasi.php">Berdonasi</a>
                    </li>
                    <li class="nav-item">
-                       <a class="nav-link" href="#galeri">Galeri</a>
+                       <a class="nav-link" href="../galeri.php">Galeri</a>
                    </li>
                    <li class="nav-item">
-                       <a class="nav-link" href="#kegiatan">Kegiatan</a>
+                       <a class="nav-link" href="../kegiatan.php">Kegiatan</a>
                    </li>
                    <li class="nav-item">
-                       <a class="nav-link" href="#profile">Profile</a>
+                       <a class="nav-link" href="../profil.php">Profile</a>
                    </li>
                    <li class="nav-item">
                        <a class="btn btn-primary" href="#register">Register</a>
