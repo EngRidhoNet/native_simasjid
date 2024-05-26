@@ -11,7 +11,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             VALUES ('$nama_pengguna', '$username', '$password', '$peran')";
 
 	if ($conn->query($sql) === TRUE) {
-		header("Location: index.php");
+		header("Location: login.php");
 		exit();
 	} else {
 		echo "Error: " . $sql . "<br>" . $conn->error;

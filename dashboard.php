@@ -9,6 +9,15 @@ include 'koneksi/koneksi.php';
     include 'includes/navbar.php';
     ?>
 
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="container">
+            <h1>Welcome to MosqueMIS</h1>
+            <p>Manage your mosque activities efficiently and effectively</p>
+            <a href="#register" class="btn btn-primary btn-lg">Get Started</a>
+        </div>
+    </div>
+
     <!-- Features Section -->
     <div class="features-section" id="features">
         <div class="container">
@@ -97,6 +106,24 @@ include 'koneksi/koneksi.php';
     </div>
 
     <style>
+        .hero-section {
+            background: url('image/home/1.jpg') no-repeat center center;
+            background-size: cover;
+            padding: 150px 0;
+            /* Increased padding */
+            color: white;
+            text-align: center;
+        }
+
+        .hero-section h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .hero-section p {
+            font-size: 1.5rem;
+        }
+
         .prayer-times-section {
             padding: 50px 0;
             background: #f8f9fa;

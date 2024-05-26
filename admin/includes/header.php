@@ -2,11 +2,11 @@
 session_start();
 
 if (!isset($_SESSION['username'])) {
-    header('Location: ../../index.php');
+    header('Location: ../../login.php');
     exit;
 }
 if ($_SESSION['peran'] !== 'admin') {
-    header('Location: unauthorized.php');
+    header('Location: ../../login.php');
     exit;
 }
 ?>

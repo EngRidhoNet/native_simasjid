@@ -1,3 +1,16 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['username'])) {
+	header('Location: ../login.php');
+	exit;
+}
+if ($_SESSION['peran'] !== 'jamaah') {
+	header('Location: ../login.php');
+	exit;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -20,23 +33,6 @@
 			font-weight: bold;
 		}
 
-		.hero-section {
-			background: url('image/home/1.jpg') no-repeat center center;
-			background-size: cover;
-			padding: 150px 0;
-			/* Increased padding */
-			color: white;
-			text-align: center;
-		}
-
-		.hero-section h1 {
-			font-size: 3rem;
-			margin-bottom: 20px;
-		}
-
-		.hero-section p {
-			font-size: 1.5rem;
-		}
 
 		.features-section {
 			padding: 50px 0;
