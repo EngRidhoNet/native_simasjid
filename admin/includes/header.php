@@ -45,7 +45,9 @@ if ($_SESSION['peran'] !== 'admin') {
         <input class="form-control form-control-dark w-100 rounded-0 border-0" type="text" placeholder="Search" aria-label="Search">
         <div class="navbar-nav">
             <div class="nav-item text-nowrap">
-                <a class="nav-link px-3" href="#">Sign out</a>
-            </div>
+                <a class="nav-link px-3" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Sign out</a>
+                <form id="logout-form" action="logout.php" method="POST" style="display: none;">
+                </form>
+            </div></form>
         </div>
     </header>

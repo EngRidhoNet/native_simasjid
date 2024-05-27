@@ -29,7 +29,7 @@
                        <a class="nav-link" href="../profil.php">Profile</a>
                    </li>
                    <li class="nav-item">
-                       <a class="btn btn-primary" href="#register">Register</a>
+                       <a class="btn btn-danger" href="../login.php">Logout</a>
                    </li>
                </ul>
            </div>
