@@ -29,7 +29,7 @@
                        <a class="nav-link" href="../profil.php">Profile</a>
                    </li>
                    <li class="nav-item">
-                       <a class="btn btn-danger" href="../login.php">Logout</a>
+                       <a class="btn btn-danger" href="includes/logout.php">Logout</a>
                    </li>
                </ul>
            </div>

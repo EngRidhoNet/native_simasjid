@@ -26,13 +26,13 @@ if ($_SESSION['peran'] !== 'jamaah') {
 			display: flex;
 			flex-direction: column;
 			min-height: 100vh;
+			margin: 0;
 		}
 
 		.navbar-brand {
 			font-size: 1.5rem;
 			font-weight: bold;
 		}
-
 
 		.features-section {
 			padding: 50px 0;
@@ -73,6 +73,7 @@ if ($_SESSION['peran'] !== 'jamaah') {
 			color: white;
 			padding: 20px 0;
 			text-align: center;
+			margin-top: auto;
 		}
 
 		.footer p {

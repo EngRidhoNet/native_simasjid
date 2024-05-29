@@ -47,7 +47,7 @@ include 'koneksi/koneksi.php';
             <h2>Latest Blog Posts</h2>
             <div class="row">
                 <?php
-                $sql = "SELECT judul, isi, foto FROM blog ORDER BY dibuat_pada DESC LIMIT 3";
+                $sql = "SELECT * FROM blog ORDER BY dibuat_pada DESC LIMIT 3";
                 $result = $conn->query($sql);
 
                 if ($result->num_rows > 0) {
@@ -58,7 +58,7 @@ include 'koneksi/koneksi.php';
                         echo '<div class="card-body">';
                         echo '<h5 class="card-title">' . $row["judul"] . '</h5>';
                         echo '<p class="card-text">' . substr($row["isi"], 0, 100) . '...</p>';
-                        echo '<a href="#" class="btn btn-primary">Read More</a>';
+                        echo '<a href="view_blog.php?id=' . $row['id_blog'] . '" class="btn btn-sm btn-outline-secondary">View</a>';
                         echo '</div>';
                         echo '</div>';
                         echo '</div>';
