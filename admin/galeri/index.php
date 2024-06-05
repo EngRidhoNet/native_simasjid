@@ -7,11 +7,15 @@
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                 <h1 class="h2">Galeri</h1>
-                <button type="button" class="btn btn-primary" id="addBookButton" data-bs-toggle="modal" data-bs-target="#addModal">Tambah Galeri</button>
+                <div>
+                    <button type="button" class="btn btn-primary" id="addBookButton" data-bs-toggle="modal" data-bs-target="#addModal">Tambah Galeri</button>
+                    <button type="button" class="btn btn-danger" id="multiDeleteButton">Hapus Galeri Terpilih</button>
+                </div>
             </div>
             <table id="galeriTable" class="table table-striped table-sm">
                 <thead>
                     <tr>
+                        <th><input type="checkbox" id="selectAll"></th>
                         <th>No</th>
                         <th>Judul</th>
                         <th>Foto</th>
@@ -26,12 +30,13 @@
                     $result = mysqli_query($conn, $query);
 
                     if (!$result) {
-                        echo "<tr><td colspan='6'>Gagal mengambil data: " . mysqli_error($conn) . "</td></tr>";
+                        echo "<tr><td colspan='7'>Gagal mengambil data: " . mysqli_error($conn) . "</td></tr>";
                     } else {
                         $no = 1;
                         while ($data = mysqli_fetch_assoc($result)) {
                     ?>
                             <tr>
+                                <td><input type="checkbox" class="selectRow" data-id="<?= htmlspecialchars($data['id_galeri']) ?>"></td>
                                 <td><?= htmlspecialchars($no++) ?></td>
                                 <td><?= htmlspecialchars($data['judul_foto']) ?></td>
                                 <td><img src="<?= htmlspecialchars($data['path_file']) ?>" alt="Foto Galeri" style="width: 100px; height: auto;"></td>
@@ -62,14 +67,15 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="judul_foto" class="form-label">Judul Foto</label>
-                        <input type="text" class="form-control" id="judul_foto" name="judul_foto" required>
+                    <div id="fileInputsContainer">
+                        <div class="mb-3 file-input-wrapper">
+                            <label for="judul_foto[]" class="form-label">Judul Foto</label>
+                            <input type="text" class="form-control" id="judul_foto[]" name="judul_foto[]" required>
+                            <label for="path_file[]" class="form-label">Foto</label>
+                            <input type="file" class="form-control" id="path_file[]" name="path_file[]" required>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="path_file" class="form-label">Foto</label>
-                        <input type="file" class="form-control" id="path_file" name="path_file" required>
-                    </div>
+                    <button type="button" class="btn btn-secondary" id="addMoreFiles">Tambah File Lain</button>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
@@ -79,6 +85,7 @@
         </form>
     </div>
 </div>
+
 
 <!-- Edit Gallery Modal -->
 <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
@@ -138,37 +145,82 @@
 <script>
     $(document).ready(function() {
         var table = $('#galeriTable').DataTable();
-    });
-    document.addEventListener('DOMContentLoaded', (event) => {
-        // Edit button event
-        document.querySelectorAll('.editBookButton').forEach(button => {
-            button.addEventListener('click', function() {
-                const id = this.dataset.id;
-                fetch(`get_gallery.php?id=${id}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        document.getElementById('edit_id_galeri').value = data.id_galeri;
-                        document.getElementById('edit_judul_foto').value = data.judul_foto;
-                        // Show the modal
-                        new bootstrap.Modal(document.getElementById('editModal')).show();
+
+        // Select/Deselect All
+        $('#selectAll').on('click', function() {
+            $('.selectRow').prop('checked', this.checked);
+        });
+
+        // Multi Delete Button Event
+        $('#multiDeleteButton').on('click', function() {
+            var selectedIds = $('.selectRow:checked').map(function() {
+                return $(this).data('id');
+            }).get();
+
+            if (selectedIds.length > 0) {
+                if (confirm('Apakah Anda yakin ingin menghapus galeri terpilih?')) {
+                    $.ajax({
+                        url: 'multi_delete_gallery.php',
+                        method: 'POST',
+                        data: {
+                            ids: selectedIds
+                        },
+                        success: function(response) {
+                            location.reload();
+                        },
+                        error: function(xhr, status, error) {
+                            alert('Terjadi kesalahan: ' + error);
+                        }
                     });
-            });
+                }
+            } else {
+                alert('Pilih galeri yang ingin dihapus.');
+            }
         });
 
-        // Delete button event
-        document.querySelectorAll('.deleteBookButton').forEach(button => {
-            button.addEventListener('click', function() {
-                const id = this.dataset.id;
-                document.getElementById('delete_id_galeri').value = id;
+        // Add more file inputs
+        $('#addMoreFiles').on('click', function() {
+            $('#fileInputsContainer').append(`
+                <div class="mb-3 file-input-wrapper">
+                    <label for="judul_foto[]" class="form-label">Judul Foto</label>
+                    <input type="text" class="form-control" id="judul_foto[]" name="judul_foto[]" required>
+                    <label for="path_file[]" class="form-label">Foto</label>
+                    <input type="file" class="form-control" id="path_file[]" name="path_file[]" required>
+                </div>
+            `);
+        });
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+            // Edit button event
+            document.querySelectorAll('.editBookButton').forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = this.dataset.id;
+                    fetch(`get_gallery.php?id=${id}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            document.getElementById('edit_id_galeri').value = data.id_galeri;
+                            document.getElementById('edit_judul_foto').value = data.judul_foto;
+                            // Show the modal
+                            new bootstrap.Modal(document.getElementById('editModal')).show();
+                        });
+                });
+            });
+
+            // Delete button event
+            document.querySelectorAll('.deleteBookButton').forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = this.dataset.id;
+                    document.getElementById('delete_id_galeri').value = id;
+                    // Show the modal
+                    new bootstrap.Modal(document.getElementById('deleteModal')).show();
+                });
+            });
+
+            // Add button event
+            document.getElementById('addBookButton').addEventListener('click', function() {
                 // Show the modal
-                new bootstrap.Modal(document.getElementById('deleteModal')).show();
+                new bootstrap.Modal(document.getElementById('addModal')).show();
             });
-        });
-
-        // Add button event
-        document.getElementById('addBookButton').addEventListener('click', function() {
-            // Show the modal
-            new bootstrap.Modal(document.getElementById('addModal')).show();
         });
     });
 </script>

@@ -12,12 +12,17 @@
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                 <h1 class="h2">Daftar Buku</h1>
-                <button type="button" class="btn btn-primary" id="addBookButton">Tambah Buku</button>
+                <div>
+                    <button type="button" class="btn btn-primary" id="addBookButton">Tambah Buku</button>
+                    <button type="button" class="btn btn-danger" id="deleteSelectedButton">Hapus Terpilih</button>
+                </div>
             </div>
+
             <div class="table-responsive">
                 <table id="bukuTable" class="table table-striped table-sm">
                     <thead>
                         <tr>
+                            <th><input type="checkbox" id="selectAll"></th>
                             <th>No</th>
                             <th>Judul</th>
                             <th>Penulis</th>
@@ -34,12 +39,13 @@
                         $result = mysqli_query($conn, $query);
 
                         if (!$result) {
-                            echo "<tr><td colspan='8'>Gagal mengambil data: " . mysqli_error($conn) . "</td></tr>";
+                            echo "<tr><td colspan='9'>Gagal mengambil data: " . mysqli_error($conn) . "</td></tr>";
                         } else {
                             $no = 1;
                             while ($data = mysqli_fetch_assoc($result)) {
                         ?>
                                 <tr>
+                                    <td><input type="checkbox" class="selectBook" data-id="<?= htmlspecialchars($data['id_buku']) ?>"></td>
                                     <td><?= htmlspecialchars($no++) ?></td>
                                     <td><?= htmlspecialchars($data['judul']) ?></td>
                                     <td><?= htmlspecialchars($data['penulis']) ?></td>
@@ -67,28 +73,35 @@
 <div class="modal fade" id="addBookModal" tabindex="-1" aria-labelledby="addBookModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form action="add_book.php" method="POST">
+            <form id="addBooksForm" action="add_book.php" method="POST">
                 <div class="modal-header">
                     <h5 class="modal-title" id="addBookModalLabel">Tambah Buku</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="judul" class="form-label">Judul</label>
-                        <input type="text" class="form-control" id="judul" name="judul" required>
+                    <div id="bookFieldsContainer">
+                        <div class="bookFields">
+                            <div class="mb-3">
+                                <label for="judul[]" class="form-label">Judul</label>
+                                <input type="text" class="form-control" name="judul[]" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="penulis[]" class="form-label">Penulis</label>
+                                <input type="text" class="form-control" name="penulis[]" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="tahun_terbit[]" class="form-label">Tahun Terbit</label>
+                                <input type="number" class="form-control" name="tahun_terbit[]" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="isbn[]" class="form-label">ISBN</label>
+                                <input type="text" class="form-control" name="isbn[]">
+                            </div>
+                            <button type="button" class="btn btn-danger removeBookButton">Hapus Buku Ini</button>
+                            <hr>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="penulis" class="form-label">Penulis</label>
-                        <input type="text" class="form-control" id="penulis" name="penulis" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="tahun_terbit" class="form-label">Tahun Terbit</label>
-                        <input type="number" class="form-control" id="tahun_terbit" name="tahun_terbit" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="isbn" class="form-label">ISBN</label>
-                        <input type="text" class="form-control" id="isbn" name="isbn">
-                    </div>
+                    <button type="button" class="btn btn-secondary" id="addMoreBooksButton">Tambah Buku Lain</button>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
@@ -98,6 +111,7 @@
         </div>
     </div>
 </div>
+
 
 <!-- Modal Edit Buku -->
 <div class="modal fade" id="editBookModal" tabindex="-1" aria-labelledby="editBookModalLabel" aria-hidden="true">
@@ -168,9 +182,36 @@
     $(document).ready(function() {
         var table = $('#bukuTable').DataTable();
 
+        var bookFieldsTemplate = $('#bookFieldsContainer .bookFields').first().clone();
+
+        // Add more book fields
+        $('#addMoreBooksButton').on('click', function() {
+            var newBookFields = bookFieldsTemplate.clone();
+            newBookFields.find('input').val('');
+            $('#bookFieldsContainer').append(newBookFields);
+        });
+
+        // Remove book fields
+        $('#bookFieldsContainer').on('click', '.removeBookButton', function() {
+            $(this).closest('.bookFields').remove();
+        });
+
         // Tambah Buku
         $('#addBookButton').on('click', function() {
             $('#addBookModal').modal('show');
+        });
+
+        // Select/Deselect All
+        $('#selectAll').on('click', function() {
+            $('.selectBook').prop('checked', this.checked);
+        });
+
+        $('.selectBook').on('click', function() {
+            if ($('.selectBook:checked').length === $('.selectBook').length) {
+                $('#selectAll').prop('checked', true);
+            } else {
+                $('#selectAll').prop('checked', false);
+            }
         });
 
         // Edit Buku
@@ -195,11 +236,25 @@
             });
         });
 
-        // Hapus Buku
+        // Hapus Buku (Single)
         $('#bukuTable tbody').on('click', '.deleteBookButton', function() {
             const id = $(this).data('id');
             $('#delete_id_buku').val(id);
             $('#deleteBookModal').modal('show');
+        });
+
+        // Hapus Buku (Multiple)
+        $('#deleteSelectedButton').on('click', function() {
+            const selectedBooks = $('.selectBook:checked').map(function() {
+                return $(this).data('id');
+            }).get();
+
+            if (selectedBooks.length > 0) {
+                $('#delete_id_buku').val(selectedBooks.join(','));
+                $('#deleteBookModal').modal('show');
+            } else {
+                alert('Tidak ada buku yang dipilih.');
+            }
         });
     });
 </script>

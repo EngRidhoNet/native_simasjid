@@ -8,11 +8,13 @@
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                 <h1 class="h2">Kegiatan</h1>
                 <button type="button" class="btn btn-primary" id="addBookButton" data-bs-toggle="modal" data-bs-target="#addModal">Tambah Kegiatan</button>
+                <button type="button" class="btn btn-danger" id="deleteSelectedButton">Hapus Terpilih</button>
             </div>
             <div class="table-responsive">
                 <table id="kegiatanTable" class="table table-striped">
                     <thead>
                         <tr>
+                            <th><input type="checkbox" id="selectAll"></th>
                             <th>Judul</th>
                             <th>Deskripsi</th>
                             <th>Foto</th>
@@ -33,6 +35,7 @@
                             // Output data of each row
                             while ($row = mysqli_fetch_assoc($result)) {
                                 echo "<tr>";
+                                echo "<td><input type='checkbox' class='selectItem' value='" . $row['id_kegiatan'] . "'></td>";
                                 echo "<td>" . $row['judul'] . "</td>";
                                 echo "<td>" . $row['deskripsi'] . "</td>";
                                 echo "<td><img src='" . $row['foto'] . "' alt='Gambar Kegiatan' width='100'></td>";
@@ -40,13 +43,13 @@
                                 echo "<td>" . $row['waktu'] . "</td>";
                                 echo "<td>" . $row['lokasi'] . "</td>";
                                 echo "<td>
-                                        <button type='button' class='btn btn-warning btn-sm' data-bs-toggle='modal' data-bs-target='#updateModal' onclick='updateBook(" . $row['id_kegiatan'] . ")'>Edit</button>
-                                        <button type='button' class='btn btn-danger btn-sm' onclick='deleteBook(" . $row['id_kegiatan'] . ")'>Hapus</button>
-                                    </td>";
+                        <button type='button' class='btn btn-warning btn-sm' data-bs-toggle='modal' data-bs-target='#updateModal' onclick='updateBook(" . $row['id_kegiatan'] . ")'>Edit</button>
+                        <button type='button' class='btn btn-danger btn-sm' onclick='deleteBook(" . $row['id_kegiatan'] . ")'>Hapus</button>
+                      </td>";
                                 echo "</tr>";
                             }
                         } else {
-                            echo "<tr><td colspan='7'>No data found...</td></tr>";
+                            echo "<tr><td colspan='8'>No data found...</td></tr>";
                         }
                         ?>
                     </tbody>
@@ -58,7 +61,7 @@
 
 <!-- Add Modal -->
 <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <form id="addKegiatanForm" action="add_kegiatan.php" method="POST" enctype="multipart/form-data">
                 <div class="modal-header">
@@ -66,30 +69,38 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="judul" class="form-label">Judul</label>
-                        <input type="text" class="form-control" id="judul" name="judul" required>
+                    <div id="kegiatanContainer">
+                        <div class="kegiatanItem">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="judul[]" class="form-label">Judul</label>
+                                    <input type="text" class="form-control" name="judul[]" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="deskripsi[]" class="form-label">Deskripsi</label>
+                                    <textarea class="form-control" name="deskripsi[]" required></textarea>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="foto[]" class="form-label">Foto</label>
+                                    <input type="file" class="form-control" name="foto[]" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="tanggal[]" class="form-label">Tanggal</label>
+                                    <input type="date" class="form-control" name="tanggal[]" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="waktu[]" class="form-label">Waktu</label>
+                                    <input type="time" class="form-control" name="waktu[]" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="lokasi[]" class="form-label">Lokasi</label>
+                                    <input type="text" class="form-control" name="lokasi[]" required>
+                                </div>
+                            </div>
+                            <hr>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="deskripsi" class="form-label">Deskripsi</label>
-                        <textarea class="form-control" id="deskripsi" name="deskripsi" required></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="foto" class="form-label">Foto</label>
-                        <input type="file" class="form-control" id="foto" name="foto" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="tanggal" class="form-label">Tanggal</label>
-                        <input type="date" class="form-control" id="tanggal" name="tanggal" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="waktu" class="form-label">Waktu</label>
-                        <input type="time" class="form-control" id="waktu" name="waktu" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="lokasi" class="form-label">Lokasi</label>
-                        <input type="text" class="form-control" id="lokasi" name="lokasi" required>
-                    </div>
+                    <button type="button" class="btn btn-secondary" id="addMoreKegiatan">Tambah Lagi</button>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -99,6 +110,7 @@
         </div>
     </div>
 </div>
+
 
 <!-- Update Modal -->
 <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
@@ -144,7 +156,6 @@
         </div>
     </div>
 </div>
-
 <!-- Delete Modal -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -167,6 +178,7 @@
     </div>
 </div>
 
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
@@ -175,6 +187,40 @@
 <script>
     $(document).ready(function() {
         $('#kegiatanTable').DataTable();
+
+        $('#selectAll').on('click', function() {
+            $('.selectItem').prop('checked', this.checked);
+        });
+
+        $('#deleteSelectedButton').on('click', function() {
+            var selected = [];
+            $('.selectItem:checked').each(function() {
+                selected.push($(this).val());
+            });
+
+            if (selected.length > 0) {
+                if (confirm('Apakah Anda yakin ingin menghapus kegiatan yang dipilih?')) {
+                    $.ajax({
+                        url: 'delete_kegiatan.php',
+                        type: 'POST',
+                        data: {
+                            id_kegiatan: selected.join(',')
+                        },
+                        success: function(response) {
+                            location.reload();
+                        }
+                    });
+                }
+            } else {
+                alert('Tidak ada kegiatan yang dipilih.');
+            }
+        });
+
+        $('#addMoreKegiatan').on('click', function() {
+            var kegiatanItem = $('.kegiatanItem:first').clone();
+            kegiatanItem.find('input, textarea').val('');
+            $('#kegiatanContainer').append(kegiatanItem);
+        });
     });
 
     function updateBook(id) {
@@ -202,5 +248,3 @@
         $('#deleteModal').modal('show');
     }
 </script>
-
-

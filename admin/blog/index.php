@@ -5,10 +5,8 @@
 <style>
     textarea.form-control {
         height: 200px;
-        /* You can adjust the height as needed */
     }
 </style>
-
 <div class="container-fluid">
     <div class="row">
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
@@ -21,6 +19,7 @@
                 <table class="table table-striped table-sm" id="blogTable">
                     <thead>
                         <tr>
+                            <th><input type="checkbox" id="selectAll"></th>
                             <th>No</th>
                             <th>Judul</th>
                             <th>Isi</th>
@@ -34,55 +33,42 @@
                     <tbody>
                         <?php
                         $sql = "SELECT blog.id_blog, blog.judul, blog.isi, blog.foto, pengguna.nama_pengguna, blog.dibuat_pada, blog.diperbarui_pada 
-                    FROM blog 
-                    JOIN pengguna ON blog.id_pengguna = pengguna.id_pengguna";
+                                FROM blog 
+                                JOIN pengguna ON blog.id_pengguna = pengguna.id_pengguna";
                         $result = $conn->query($sql);
 
                         if ($result->num_rows > 0) {
-                            $counter = 1; // Initialize the counter
+                            $counter = 1;
                             while ($row = $result->fetch_assoc()) {
                                 echo "<tr>
-                        <td>" . $counter . "</td> <!-- Use the counter for the ID column -->
-                        <td>" . $row["judul"] . "</td>
-                        <td>" . substr($row["isi"], 0, 50) . "...</td>
-                        <td><img src='" . $row["foto"] . "' alt='Foto' style='width: 100px; height: auto;'></td>
-                        <td>" . $row["nama_pengguna"] . "</td>
-                        <td>" . $row["dibuat_pada"] . "</td>
-                        <td>" . $row["diperbarui_pada"] . "</td>
-                        <td>
-                            <button class='btn btn-sm btn-warning editBlogButton' data-id='" . $row["id_blog"] . "'>Edit</button>
-                            <button class='btn btn-sm btn-danger deleteBlogButton' data-id='" . $row["id_blog"] . "'>Delete</button>
-                        </td>
-                    </tr>";
-                                $counter++; // Increment the counter
+                                    <td><input type='checkbox' class='blogCheckbox' data-id='" . $row["id_blog"] . "'></td>
+                                    <td>" . $counter . "</td>
+                                    <td>" . $row["judul"] . "</td>
+                                    <td>" . substr($row["isi"], 0, 50) . "...</td>
+                                    <td><img src='" . $row["foto"] . "' alt='Foto' style='width: 100px; height: auto;'></td>
+                                    <td>" . $row["nama_pengguna"] . "</td>
+                                    <td>" . $row["dibuat_pada"] . "</td>
+                                    <td>" . $row["diperbarui_pada"] . "</td>
+                                    <td>
+                                        <button class='btn btn-sm btn-warning editBlogButton' data-id='" . $row["id_blog"] . "'>Edit</button>
+                                        <button class='btn btn-sm btn-danger deleteBlogButton' data-id='" . $row["id_blog"] . "'>Delete</button>
+                                    </td>
+                                </tr>";
+                                $counter++;
                             }
                         } else {
-                            echo "<tr><td colspan='8'>No blogs found</td></tr>";
+                            echo "<tr><td colspan='9'>No blogs found</td></tr>";
                         }
                         ?>
                     </tbody>
                 </table>
+                <button class='btn btn-sm btn-danger' id='deleteSelectedBlogsButton'>Delete Selected</button>
             </div>
-
-
         </main>
     </div>
 </div>
 
-<!-- untuk memanggil nama pengguna -->
-<?php
-$sql = "SELECT id_pengguna, nama_pengguna FROM pengguna";
-$result = $conn->query($sql);
-$users = [];
-
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $users[] = $row;
-    }
-}
-?>
-
-<!-- Add Blog Modal -->
+<!-- Modal Add -->
 <div class="modal fade" id="addBlogModal" tabindex="-1" aria-labelledby="addBlogModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -92,36 +78,46 @@ if ($result->num_rows > 0) {
             </div>
             <div class="modal-body">
                 <form id="addBlogForm" enctype="multipart/form-data">
-                    <div class="mb-3">
-                        <label for="judul" class="form-label">Judul</label>
-                        <input type="text" class="form-control" id="judul" name="judul" required>
+                    <div id="blogEntries">
+                        <div class="blog-entry">
+                            <div class="mb-3">
+                                <label for="judul" class="form-label">Judul</label>
+                                <input type="text" class="form-control" name="judul[]" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="isi" class="form-label">Isi</label>
+                                <textarea class="form-control" name="isi[]" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="foto" class="form-label">Foto</label>
+                                <input type="file" class="form-control" name="foto[]" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="id_pengguna" class="form-label">Penulis</label>
+                                <select class="form-select" name="id_pengguna[]" required>
+                                    <option value="" disabled selected>Pilih Penulis</option>
+                                    <?php
+                                    $sql = "SELECT id_pengguna, nama_pengguna FROM pengguna";
+                                    $result = $conn->query($sql);
+                                    if ($result->num_rows > 0) {
+                                        while ($row = $result->fetch_assoc()) {
+                                            echo "<option value='" . $row['id_pengguna'] . "'>" . $row['nama_pengguna'] . "</option>";
+                                        }
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                            <button type="button" class="btn btn-danger removeBlogEntry">Remove</button>
+                            <hr>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="isi" class="form-label">Isi</label>
-                        <textarea class="form-control" id="isi" name="isi" required></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="foto" class="form-label">Foto</label>
-                        <input type="file" class="form-control" id="foto" name="foto" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="id_pengguna" class="form-label">Penulis</label>
-                        <select class="form-select" id="id_pengguna" name="id_pengguna" required>
-                            <option value="" disabled selected>Pilih Penulis</option>
-                            <?php foreach ($users as $user) : ?>
-                                <option value="<?php echo $user['id_pengguna']; ?>">
-                                    <?php echo $user['nama_pengguna']; ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
+                    <button type="button" class="btn btn-success" id="addBlogEntryButton">Add Another Blog</button>
                     <button type="submit" class="btn btn-primary">Simpan</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
-
 
 <!-- Edit Blog Modal -->
 <div class="modal fade" id="editBlogModal" tabindex="-1" aria-labelledby="editBlogModalLabel" aria-hidden="true">
@@ -144,17 +140,22 @@ if ($result->num_rows > 0) {
                     </div>
                     <div class="mb-3">
                         <label for="edit_foto" class="form-label">Foto</label>
-                        <input type="file" class="form-control" id="edit_foto" name="foto" value="" required>
+                        <input type="file" class="form-control" id="edit_foto" name="foto">
+                        <span id="edit_foto_info"></span>
                     </div>
                     <div class="mb-3">
-                        <label for="id_pengguna" class="form-label">Penulis</label>
-                        <select class="form-select" id="id_pengguna" name="id_pengguna" required>
+                        <label for="edit_id_pengguna" class="form-label">Penulis</label>
+                        <select class="form-select" id="edit_id_pengguna" name="id_pengguna" required>
                             <option value="" disabled selected>Pilih Penulis</option>
-                            <?php foreach ($users as $user) : ?>
-                                <option value="<?php echo $user['id_pengguna']; ?>">
-                                    <?php echo $user['nama_pengguna']; ?>
-                                </option>
-                            <?php endforeach; ?>
+                            <?php
+                            $sql = "SELECT id_pengguna, nama_pengguna FROM pengguna";
+                            $result = $conn->query($sql);
+                            if ($result->num_rows > 0) {
+                                while ($row = $result->fetch_assoc()) {
+                                    echo "<option value='" . $row['id_pengguna'] . "'>" . $row['nama_pengguna'] . "</option>";
+                                }
+                            }
+                            ?>
                         </select>
                     </div>
                     <button type="submit" class="btn btn-primary">Simpan</button>
@@ -185,38 +186,34 @@ if ($result->num_rows > 0) {
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
 <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
 <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
 
-
 <script>
-    $('#blogTable').DataTable();
     $(document).ready(function() {
-        // Initialize CKEditor for Add Blog Modal
+        $('#blogTable').DataTable();
+
         CKEDITOR.replace('isi');
+        CKEDITOR.replace('edit_isi');
+
+        // Add another blog entry
+        $('#addBlogEntryButton').on('click', function() {
+            var blogEntry = $('.blog-entry:first').clone();
+            blogEntry.find('input').val('');
+            blogEntry.find('textarea').val('');
+            $('#blogEntries').append(blogEntry);
+        });
+
+        // Remove a blog entry
+        $(document).on('click', '.removeBlogEntry', function() {
+            if ($('.blog-entry').length > 1) {
+                $(this).closest('.blog-entry').remove();
+            }
+        });
 
         $('#addBlogButton').on('click', function() {
             $('#addBlogModal').modal('show');
-        });
-
-        $('#addBlogForm').on('submit', function(e) {
-            e.preventDefault();
-            for (instance in CKEDITOR.instances)
-                CKEDITOR.instances[instance].updateElement();
-            var formData = new FormData(this);
-            $.ajax({
-                url: 'add_blog.php',
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function(response) {
-                    $('#addBlogModal').modal('hide');
-                    location.reload();
-                }
-            });
         });
 
         $('.editBlogButton').on('click', function() {
@@ -225,48 +222,23 @@ if ($result->num_rows > 0) {
                 url: 'get_blog.php',
                 type: 'GET',
                 data: {
-                    id: id
+                    id_blog: id
                 },
                 success: function(response) {
                     var blog = JSON.parse(response);
                     $('#edit_id_blog').val(blog.id_blog);
                     $('#edit_judul').val(blog.judul);
-
-                    // Set the value of the combobox to the selected nama_pengguna
-                    $('#id_pengguna').val(blog.nama_pengguna);
-
-                    // Check if CKEditor instance already exists and destroy it before creating a new one
-                    if (CKEDITOR.instances['edit_isi']) {
-                        CKEDITOR.instances['edit_isi'].destroy(true);
-                    }
-
-                    // Initialize the CKEditor instance for the edit_isi textarea
-                    CKEDITOR.replace('edit_isi');
-                    CKEDITOR.instances['edit_isi'].setData(blog.isi);
-
-                    // Handle file input - Note: You can't set the file input value programmatically for security reasons.
-                    // Instead, you can provide a way to inform the user that the existing file will remain unchanged unless they select a new file.
-                    $('#edit_foto_info').text(blog.foto ? `Current file: ${blog.foto}` : 'No file uploaded');
-
+                    CKEDITOR.instances.edit_isi.setData(blog.isi);
+                    $('#edit_foto').val(blog.foto);
+                    $('#edit_id_pengguna').val(blog.id_pengguna);
                     $('#editBlogModal').modal('show');
                 }
             });
         });
 
-        $('#editBlogForm').on('submit', function(e) {
-            e.preventDefault();
-            var formData = new FormData(this);
-            $.ajax({
-                url: 'edit_blog.php',
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function(response) {
-                    $('#editBlogModal').modal('hide');
-                    location.reload();
-                }
-            });
+        // Select all checkboxes
+        $('#selectAll').on('click', function() {
+            $('.blogCheckbox').prop('checked', this.checked);
         });
 
         $('.deleteBlogButton').on('click', function() {
@@ -277,19 +249,59 @@ if ($result->num_rows > 0) {
 
         $('#deleteBlogForm').on('submit', function(e) {
             e.preventDefault();
+            var id_blog = $('#delete_id_blog').val();
             $.ajax({
                 url: 'delete_blog.php',
                 type: 'POST',
-                data: $(this).serialize(),
+                data: {
+                    blog_ids: [id_blog] // Mengirimkan id_blog sebagai array
+                },
                 success: function(response) {
-                    $('#deleteBlogModal').modal('hide');
-                    location.reload();
+                    var result = JSON.parse(response);
+                    if (result.status === 'success') {
+                        $('#deleteBlogModal').modal('hide');
+                        location.reload();
+                    } else {
+                        alert(result.message);
+                    }
+                },
+                error: function() {
+                    alert('Failed to delete blog.');
                 }
             });
         });
 
-        feather.replace({
-            'aria-hidden': 'true'
+        $('#deleteSelectedBlogsButton').on('click', function() {
+            var selectedBlogs = [];
+            $('.blogCheckbox:checked').each(function() {
+                selectedBlogs.push($(this).data('id'));
+            });
+
+            if (selectedBlogs.length > 0) {
+                if (confirm('Are you sure you want to delete the selected blogs?')) {
+                    $.ajax({
+                        url: 'delete_blog.php',
+                        type: 'POST',
+                        data: {
+                            blog_ids: selectedBlogs // Mengirimkan array id_blog
+                        },
+                        success: function(response) {
+                            var result = JSON.parse(response);
+                            if (result.status === 'success') {
+                                location.reload();
+                            } else {
+                                alert(result.message);
+                            }
+                        },
+                        error: function() {
+                            alert('Failed to delete blogs.');
+                        }
+                    });
+                }
+            } else {
+                alert('Please select at least one blog to delete.');
+            }
         });
+
     });
 </script>

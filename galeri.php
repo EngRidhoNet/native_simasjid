@@ -57,6 +57,20 @@ include 'koneksi/koneksi.php';
         margin: 0;
         color: #777;
     }
+
+    .download-btn {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 5px 10px;
+        background-color: #007bff;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 5px;
+    }
+
+    .download-btn:hover {
+        background-color: #0056b3;
+    }
 </style>
 
 <body>
@@ -83,6 +97,7 @@ include 'koneksi/koneksi.php';
                                 <div class="caption">
                                     <h5><?php echo htmlspecialchars($row['judul_foto']); ?></h5>
                                     <p>Uploaded by <?php echo htmlspecialchars($row['nama_pengguna']); ?> on <?php echo date('d M Y', strtotime($row['diunggah_pada'])); ?></p>
+                                    <a href="admin/galeri/<?php echo $row['path_file']; ?>" class="download-btn" download>Download</a>
                                 </div>
                             </div>
                         </div>
